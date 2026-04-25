@@ -10,7 +10,7 @@
 ```javascript
 const thai = {
   pronouns: "he" | "him",
-  code: [Javascript, Typescript, HTML, CSS, Rust, Python, Java],
+  code: [Javascript, Typescript, HTML, CSS, Go, Rust, Python, Java],
   tools: [React, Vue, Node, Docker, Maven],
   architecture: ["microservices", "event-driven", "design system pattern"],
   challenge: "I am contributing to open source project..."
