@@ -1,0 +1,32 @@
+name: Update Contribution Stats
+
+on:
+  schedule:
+    # Every Monday at 00:00 UTC
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Update contribution stats
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash .github/scripts/update-contributions.sh
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --exit-code README.md; then
+            echo "No changes, skipping commit."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add README.md
+            git commit -m "📊 Update open source contribution stats [skip ci]"
+            git push
+          fi
