@@ -24,8 +24,8 @@ const thai = {
 <td width="50%">
   
 **Last 12 months**  
-- 🟢 **343** total contributions  
-- 📝 **128** commits  
+- 🟢 **344** total contributions  
+- 📝 **129** commits  
 - 🔀 **19** pull requests  
 - 🐛 **2** issues  
 - 👀 **1** PR review  
@@ -33,8 +33,8 @@ const thai = {
 <td width="50%">
 
 **All time**  
-- 📦 **53** original repos  
-- 🍴 **200+** forked repos  
+- 📦 **36** original repos  
+- 🍴 **168+** forked repos  
 - ⭐ **9** total stars  
 - 👥 **20** followers  
 - 🗓️ Since **2019**
