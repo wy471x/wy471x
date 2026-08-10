@@ -24,9 +24,9 @@ const thai = {
 <td width="50%">
   
 **Last 12 months**  
-- 🟢 **374** total contributions  
+- 🟢 **378** total contributions  
 - 📝 **161** commits  
-- 🔀 **32** pull requests  
+- 🔀 **37** pull requests  
 - 🐛 **2** issues  
 - 👀 **1** PR review  
 </td>
