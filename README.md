@@ -3,7 +3,7 @@
 <em> Coding for fun!</em>
 </p>
 
-[![GitHub](https://img.shields.io/github/followers/wy471x?label=follow&style=social)](https://github.com/wy471x) &nbsp; [![Gmail](https://img.shields.io/badge/Gmail-wy471x@gmail.com-red?style=social&logo=gmail)](mailto:wy471x@gmail.com)
+[![GitHub](https://img.shields.io/github/followers/wy471x?label=follow&style=social)](https://github.com/wy471x) &nbsp; [![Gmail](https://img.shields.io/badge/Gmail-wy471x@gmail.com-red?style=social&logo=gmail)](mailto:wanyong@apache.org)
 
 ### 👏 About me
 
