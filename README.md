@@ -24,19 +24,19 @@ const thai = {
 <td width="50%">
   
 **Last 12 months**  
-- 🟢 **453** total contributions  
-- 📝 **212** commits  
-- 🔀 **85** pull requests  
-- 🐛 **4** issues  
-- 👀 **33** PR review  
+- 🟢 **485** total contributions  
+- 📝 **222** commits  
+- 🔀 **90** pull requests  
+- 🐛 **10** issues  
+- 👀 **44** PR review  
 </td>
 <td width="50%">
 
 **All time**  
 - 📦 **39** original repos  
-- 🍴 **221+** forked repos  
+- 🍴 **223+** forked repos  
 - ⭐ **11** total stars  
-- 👥 **22** followers  
+- 👥 **21** followers  
 - 🗓️ Since **2019**
 </td>
 </tr>
