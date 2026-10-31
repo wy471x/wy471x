@@ -42,6 +42,8 @@ gh_graphql() {
 }
 
 # Single GraphQL call: contributions + repo counts + first 100 repos with stars
+# privacy: PUBLIC keeps numbers identical between a local token (sees private repos)
+# and the CI GITHUB_TOKEN (public only).
 echo "  → Fetching profile, contribution stats & repo stars..."
 RESPONSE=$(gh_graphql -f query='
 query {
@@ -53,10 +55,10 @@ query {
       totalIssueContributions
       contributionCalendar { totalContributions }
     }
-    originalRepos: repositories(first: 1, ownerAffiliations: OWNER, isFork: false) {
+    originalRepos: repositories(first: 1, ownerAffiliations: OWNER, isFork: false, privacy: PUBLIC) {
       totalCount
     }
-    allRepos: repositories(first: 100, ownerAffiliations: OWNER) {
+    allRepos: repositories(first: 100, ownerAffiliations: OWNER, privacy: PUBLIC) {
       totalCount
       nodes { stargazerCount }
       pageInfo { endCursor, hasNextPage }
@@ -91,7 +93,7 @@ while [ "$HAS_NEXT" = "true" ]; do
   REPO_RESPONSE=$(gh_graphql -f query="
   query {
     user(login: \"wy471x\") {
-      repositories(first: 100, ownerAffiliations: OWNER, after: \"$CURSOR\") {
+      repositories(first: 100, ownerAffiliations: OWNER, privacy: PUBLIC, after: \"$CURSOR\") {
         nodes { stargazerCount }
         pageInfo { endCursor, hasNextPage }
       }
