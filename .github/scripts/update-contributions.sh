@@ -2,6 +2,7 @@
 set -euo pipefail
 
 README="README.md"
+MERGED_PR_COUNT=12
 
 echo "Fetching contribution data from GitHub API..."
 
@@ -116,16 +117,96 @@ echo "  Forked repos:   $FORKED_REPOS"
 echo "  Total stars:    $TOTAL_STARS"
 echo "  Followers:      $FOLLOWERS"
 
-# Update README
-sed -i -E "s/\*\*[0-9]+\*\* total contributions/**${TOTAL_CONTRIBUTIONS}** total contributions/" "$README"
-sed -i -E "s/\*\*[0-9]+\*\* commits/**${TOTAL_COMMITS}** commits/" "$README"
-sed -i -E "s/\*\*[0-9]+\*\* pull requests/**${TOTAL_PRS}** pull requests/" "$README"
-sed -i -E "s/\*\*[0-9]+\*\* issues/**${TOTAL_ISSUES}** issues/" "$README"
-sed -i -E "s/\*\*[0-9]+\*\* PR review/**${TOTAL_REVIEWS}** PR review/" "$README"
-sed -i -E "s/\*\*[0-9]+\*\* original repos/**${ORIGINAL_REPOS}** original repos/" "$README"
-sed -i -E "s/\*\*[0-9]+\+\*\* forked repos/**${FORKED_REPOS}+** forked repos/" "$README"
-sed -i -E "s/\*\*[0-9]+\*\* total stars/**${TOTAL_STARS}** total stars/" "$README"
-sed -i -E "s/\*\*[0-9]+\*\* followers/**${FOLLOWERS}** followers/" "$README"
+# Update README (perl for GNU/BSD sed portability)
+set_stat() {
+  local label="$1"
+  local value="$2"
+  perl -i -pe "s/\\*\\*[0-9]+\\+?\\*\\* \\Q${label}\\E/**${value}** ${label}/g" "$README"
+}
+
+set_stat "total contributions" "$TOTAL_CONTRIBUTIONS"
+set_stat "commits"             "$TOTAL_COMMITS"
+set_stat "pull requests"       "$TOTAL_PRS"
+set_stat "issues"              "$TOTAL_ISSUES"
+set_stat "PR review"           "$TOTAL_REVIEWS"
+set_stat "original repos"      "$ORIGINAL_REPOS"
+set_stat "forked repos"        "${FORKED_REPOS}+"
+set_stat "total stars"         "$TOTAL_STARS"
+set_stat "followers"           "$FOLLOWERS"
+
+echo ""
+echo "  → Fetching recently merged pull requests..."
+
+PR_RESPONSE=$(gh_graphql -f query="
+query {
+  search(query: \"author:wy471x is:pr is:merged sort:updated-desc\", type: ISSUE, first: $MERGED_PR_COUNT) {
+    nodes {
+      ... on PullRequest {
+        title
+        url
+        mergedAt
+        repository { nameWithOwner stargazerCount }
+      }
+    }
+  }
+}
+") || PR_RESPONSE=""
+
+PR_TABLE=$(mktemp)
+if [ -n "$PR_RESPONSE" ] && echo "$PR_RESPONSE" | jq -e '.data.search' >/dev/null 2>&1; then
+  echo "$PR_RESPONSE" | jq -r --argjson n "$MERGED_PR_COUNT" '
+    [ .data.search.nodes[]? | select(.url != null and .mergedAt != null) ][0:$n]
+    | group_by(.repository.nameWithOwner)
+    | map({
+        repo: .[0].repository.nameWithOwner,
+        stars: (.[0].repository.stargazerCount // 0),
+        items: (sort_by(.mergedAt) | reverse)
+      })
+    | sort_by(-(.items | length))
+    | map(
+        "**[\(.repo)](https://github.com/\(.repo))**"
+        + (if .stars > 0 then " · ⭐ \(.stars)" else "" end)
+        + "\n\n"
+        + ([ .items[]
+             | "- ["
+               + (.title
+                   | gsub("\\(#[0-9]+\\)\\s*$"; "")
+                   | sub("\\s+$"; "")
+                   | gsub("\\|"; "\\|"))
+               + "](" + .url + ") · " + (.mergedAt | split("T")[0])
+           ] | join("\n"))
+      )
+    | join("\n\n")
+  ' > "$PR_TABLE" || true
+  [ -s "$PR_TABLE" ] || echo "_No recently merged pull requests._" > "$PR_TABLE"
+fi
+
+if [ -s "$PR_TABLE" ]; then
+  # Replace the table between the markers, keeping the markers themselves.
+  awk -v start="<!-- MERGED_PRS:START -->" -v end="<!-- MERGED_PRS:END -->" -v content="$PR_TABLE" '
+    index($0, start) > 0 { print; while ((getline line < content) > 0) print line; close(content); skip=1; next }
+    index($0, end) > 0   { skip=0; print; next }
+    skip != 1 { print }
+  ' "$README" > "$README.tmp" && mv "$README.tmp" "$README"
+  echo "  Merged PRs written: $(grep -c '^- ' "$PR_TABLE" || true) entries"
+else
+  echo "  ⚠️  Could not fetch merged PRs, leaving existing table untouched."
+fi
+rm -f "$PR_TABLE"
+
+# Nudge when the hand-maintained "Now" section goes stale.
+NOW_UPDATED=$(grep -oE 'NOW:UPDATED:[0-9]{4}-[0-9]{2}-[0-9]{2}' "$README" | head -1 | cut -d: -f3 || true)
+if [ -n "$NOW_UPDATED" ]; then
+  NOW_AGE=""
+  if command -v python3 >/dev/null 2>&1; then
+    NOW_AGE=$(python3 -c 'import sys, datetime; print((datetime.date.today() - datetime.date.fromisoformat(sys.argv[1])).days)' "$NOW_UPDATED" 2>/dev/null || true)
+  fi
+  if [ -n "$NOW_AGE" ] && [ "$NOW_AGE" -gt 30 ] 2>/dev/null; then
+    echo "::warning title=Now section is stale::README 'Now' was last updated ${NOW_AGE} days ago ($NOW_UPDATED). Refresh the in-progress links and bump the NOW:UPDATED marker."
+  elif [ -n "$NOW_AGE" ]; then
+    echo "  Now section updated ${NOW_AGE} days ago."
+  fi
+fi
 
 echo ""
 echo "README updated successfully."
