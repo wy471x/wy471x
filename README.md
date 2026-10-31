@@ -59,8 +59,8 @@
 <td width="50%">
 
 **Last 12 months**
-- 🟢 **522** total contributions
-- 📝 **227** commits
+- 🟢 **523** total contributions
+- 📝 **228** commits
 - 🔀 **95** pull requests
 - 👀 **62** PR review
 - 🐛 **19** issues
@@ -69,8 +69,8 @@
 <td width="50%">
 
 **All time**
-- 📦 **56** original repos
-- 🍴 **228+** forked repos
+- 📦 **39** original repos
+- 🍴 **225+** forked repos
 - ⭐ **11** total stars
 - 👥 **20** followers
 - 🗓️ Since **2019**
