@@ -42,19 +42,20 @@ FONT_CANDIDATES = [
 
 TERMINAL = [
     ("$ whoami", None),
-    ("Yong Wan", "@wy471x"),
-    ("open source", "apache shenyu"),
+    ("Yong Wan", "@wy471x", 10),
     (None, None),
-    ("$ cat now.txt", None),
-    ("gateway api conformance", None),
-    ("tracing plugin, pr 5/5", None),
-    (None, None),
-    ("$ ls stack/", None),
-    ("java  go  rust  typescript", None),
+    ("$ ls ~/open-source", None),
+    ("apache/shenyu", "api gateway"),
+    ("apache/hertzbeat", "observability"),
+    ("apache/shenyu-website", "documentation"),
+    ("ottertui/ottertui", "terminal ui"),
+    ("GreptimeTeam/greptimedb", "time-series db"),
     (None, None),
     ("$ uptime", None),
     ("contributing since 2019", None),
 ]
+
+PAIR_COLUMN = 25                   # monospace column for project descriptions
 
 RAMP = " .:-=+*#%@"
 
@@ -156,7 +157,10 @@ def build_frame(art, terminal_font, prompt_font, t, frames, vignette, scanlines,
     draw.line([(DIVIDER_X, PANEL[1]), (DIVIDER_X, PANEL[3])], fill=GREEN_DIM, width=1)
 
     y = TEXT_Y
-    for text, extra in TERMINAL:
+    for row in TERMINAL:
+        text = row[0]
+        extra = row[1] if len(row) > 1 else None
+        column = row[2] if len(row) > 2 else PAIR_COLUMN
         if text is None:
             y += LINE_GAP // 2
             continue
@@ -165,8 +169,8 @@ def build_frame(art, terminal_font, prompt_font, t, frames, vignette, scanlines,
         else:
             draw.text((TEXT_X, y), text, font=terminal_font, fill=GREEN_MID)
         if extra:
-            w = draw.textlength(text, font=terminal_font)
-            draw.text((TEXT_X + w + 12, y), extra, font=terminal_font, fill=GREEN_DIM)
+            col = TEXT_X + draw.textlength("M" * column, font=terminal_font)
+            draw.text((col, y), extra, font=terminal_font, fill=GREEN_DIM)
         y += LINE_GAP
 
     if (int(t * frames) // 3) % 2 == 0:
