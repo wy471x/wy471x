@@ -1,3 +1,9 @@
+<!-- CRT card: regenerate with `python3 .github/scripts/make-profile-card.py` -->
+
+<p align="center">
+  <img width="800" src="assets/profile-card.gif" alt="wy471x — CRT profile card" />
+</p>
+
 <h2 align="center">😊 Hi, I'm Yong Wan</h2>
 
 <p align="center"><em>Coding for fun — mostly around the Apache ShenYu API gateway.</em></p>
