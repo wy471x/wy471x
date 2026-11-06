@@ -1,0 +1,46 @@
+{
+  "user": "wy471x",
+  "exclude": [
+    "wy471x/wy471x",
+    "ottertui/.github"
+  ],
+  "categories": [
+    {
+      "name": "API Gateway",
+      "repos": [
+        "apache/shenyu",
+        "apache/shenyu-website",
+        "apache/shenyu-dashboard"
+      ]
+    },
+    {
+      "name": "Observability",
+      "repos": [
+        "apache/hertzbeat",
+        "GreptimeTeam/greptimedb"
+      ]
+    },
+    {
+      "name": "Terminal UI",
+      "repos": [
+        "ottertui/ottertui"
+      ]
+    },
+    {
+      "name": "AI agents",
+      "repos": [
+        "makecindy/cindy",
+        "apache/maka",
+        "higress-group/HiRoute"
+      ]
+    },
+    {
+      "name": "Others",
+      "repos": [
+        "MoePlayer/hexo-tag-aplayer",
+        "algorithm010/algorithm010"
+      ]
+    }
+  ],
+  "fallback_category": "Others"
+}

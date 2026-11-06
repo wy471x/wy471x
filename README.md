@@ -6,6 +6,7 @@
 
 ## 🌱 Open Source
 
+<!-- OSS:START -->
 **API Gateway**
 - [apache/shenyu](https://github.com/apache/shenyu)
 - [apache/shenyu-website](https://github.com/apache/shenyu-website)
@@ -24,5 +25,6 @@
 - [higress-group/HiRoute](https://github.com/higress-group/HiRoute)
 
 **Others**
-- [MoePlayer/hexo-tag-aplayer](https://github.com/MoePlayer/hexo-tag-aplayer)
 - [algorithm010/algorithm010](https://github.com/algorithm010/algorithm010)
+- [MoePlayer/hexo-tag-aplayer](https://github.com/MoePlayer/hexo-tag-aplayer)
+<!-- OSS:END -->
